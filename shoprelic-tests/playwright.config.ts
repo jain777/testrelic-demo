@@ -8,21 +8,12 @@ export default defineConfig({
   workers: 1,
   reporter: [
     ['list'],
-    ['@testrelic/playwright-analytics', {
-      apiKey: process.env.TESTRELIC_API_KEY || '',
-      projectId: process.env.TESTRELIC_PROJECT_ID || '',
-      branch: process.env.BRANCH || 'main',
-      commit: process.env.COMMIT_SHA || '',
-      buildNumber: process.env.BUILD_NUMBER || '',
-      outputPath: './test-results/analytics-timeline.json',
-      includeStackTrace: true,
-      includeCodeSnippets: true,
-      includeNetworkStats: true,
-      tags: {
-        deploy: process.env.DEPLOY_TAG || '',
-        environment: 'staging',
-        app: 'shoprelic'
-      }
+    ['@testrelic/playwright-analytics/reporter', {
+      cloud: {
+        apiKey: process.env.TESTRELIC_API_KEY || '',
+        upload: 'both',
+        uploadArtifacts: true,
+      },
     }]
   ],
   use: {

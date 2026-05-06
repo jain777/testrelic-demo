@@ -84,12 +84,24 @@ A lightweight Express.js + EJS e-commerce app with in-memory data (no database).
 
 ## TestRelic SDK Configuration
 
-The test suite uses `@testrelic/playwright-analytics` as a Playwright reporter with:
+The test suite uses `@testrelic/playwright-analytics/reporter` as a Playwright reporter:
 
-- Local analytics timeline output (`./test-results/analytics-timeline.json`)
-- Stack traces, code snippets, and network stats included
-- Cloud sync via API key (set `TESTRELIC_API_KEY` in `.env`)
-- Run metadata: branch, commit SHA, build number, deploy tag
+```ts
+['@testrelic/playwright-analytics/reporter', {
+  cloud: {
+    apiKey: process.env.TESTRELIC_API_KEY || '',
+    upload: 'both',
+    uploadArtifacts: true,
+  },
+}]
+```
+
+All test files import from `@testrelic/playwright-analytics/fixture` for automatic navigation tracking.
+
+Set your API key via environment variable or in `shoprelic-tests/.env`:
+```bash
+TESTRELIC_API_KEY=tr_live_... npx playwright test
+```
 
 ## License
 

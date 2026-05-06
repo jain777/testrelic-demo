@@ -4,3 +4,6 @@ playwright-report/
 .env
 .DS_Store
 *.log
+
+# TestRelic test artifacts
+shoprelic-tests/test-results/artifacts/

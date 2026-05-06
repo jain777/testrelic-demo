@@ -22,7 +22,10 @@ if [ -z "$TESTRELIC_API_KEY" ] && [ -f "$TEST_DIR/.env" ]; then
   export $(grep -v '^#' "$TEST_DIR/.env" | xargs)
 fi
 
-export TESTRELIC_API_KEY="${TESTRELIC_API_KEY:-tr_live_573ee14b22d6b8be0ba6749bb8591b044880aff729bc360ad4e4669dda46f3e3}"
+if [ -z "$TESTRELIC_API_KEY" ]; then
+  echo "[!] TESTRELIC_API_KEY is not set. Set it in your environment or in shoprelic-tests/.env"
+  exit 1
+fi
 
 # Mock commit SHAs for the story arc
 COMMITS=(
@@ -131,7 +134,7 @@ run_tests() {
   COMMIT_SHA="$commit" \
   BUILD_NUMBER="$run_number" \
   DEPLOY_TAG="$deploy_tag" \
-  npx playwright test --reporter=list 2>&1 || true
+  npx playwright test 2>&1 || true
 
   echo "[*] Run $run_number complete."
   sleep 2
