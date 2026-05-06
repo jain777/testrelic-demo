@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="nav-brand">ShopRelic</a>
+      <div class="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/products" class="nav-link">Products</a>
+        <a href="/cart" class="nav-link nav-cart">
+          Cart
+          <% if (cartCount > 0) { %>
+            <span class="cart-badge"><%= cartCount %></span>
+          <% } %>
+        </a>
+        <% if (user) { %>
+          <a href="/profile" class="nav-link">Profile</a>
+          <form action="/logout" method="POST" class="nav-logout-form">
+            <button type="submit" class="nav-link nav-logout-btn">Logout</button>
+          </form>
+        <% } else { %>
+          <a href="/login" class="nav-link">Sign In</a>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+  <main class="main-content">

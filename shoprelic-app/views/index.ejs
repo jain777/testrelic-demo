@@ -1,0 +1,48 @@
+<%- include('partials/header', { title: title, cartCount: cartCount, user: user }) %>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>Welcome to ShopRelic</h1>
+    <p class="hero-tagline">Your one-stop shop for everything</p>
+    <a href="/products" class="btn btn-primary btn-lg">Shop Now</a>
+  </div>
+</section>
+
+<section class="container section">
+  <h2 class="section-title">Featured Products</h2>
+  <div class="product-grid">
+    <% featured.forEach(product => { %>
+      <div class="product-card">
+        <a href="/products/<%= product.id %>">
+          <img src="<%= product.image %>" alt="<%= product.name %>" class="product-card-image">
+        </a>
+        <div class="product-card-body">
+          <span class="category-badge"><%= product.category %></span>
+          <h3 class="product-card-title">
+            <a href="/products/<%= product.id %>"><%= product.name %></a>
+          </h3>
+          <div class="product-card-rating">
+            <span class="stars">
+              <% for (let i = 1; i <= 5; i++) { %>
+                <% if (i <= Math.floor(product.rating)) { %>
+                  &#9733;
+                <% } else if (i - 0.5 <= product.rating) { %>
+                  &#9733;
+                <% } else { %>
+                  &#9734;
+                <% } %>
+              <% } %>
+            </span>
+            <span class="review-count">(<%= product.reviewCount %>)</span>
+          </div>
+          <div class="product-card-footer">
+            <span class="product-card-price">$<%= product.price.toFixed(2) %></span>
+            <a href="/products/<%= product.id %>" class="btn btn-sm btn-outline">View</a>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

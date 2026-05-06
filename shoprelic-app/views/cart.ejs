@@ -1,0 +1,65 @@
+<%- include('partials/header', { title: title, cartCount: cartCount, user: user }) %>
+
+<section class="container section">
+  <h1 class="page-title">Shopping Cart</h1>
+
+  <% if (cartItems.length === 0) { %>
+    <div class="empty-state">
+      <h2>Your cart is empty</h2>
+      <p>Looks like you haven't added anything to your cart yet.</p>
+      <a href="/products" class="btn btn-primary">Continue Shopping</a>
+    </div>
+  <% } else { %>
+    <div class="cart-content">
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% cartItems.forEach(item => { %>
+            <tr>
+              <td class="cart-product-cell">
+                <img src="<%= item.product.image %>" alt="<%= item.product.name %>" class="cart-product-image">
+                <a href="/products/<%= item.product.id %>" class="cart-product-name"><%= item.product.name %></a>
+              </td>
+              <td>$<%= item.product.price.toFixed(2) %></td>
+              <td>
+                <form action="/cart/update" method="POST" class="cart-qty-form">
+                  <input type="hidden" name="productId" value="<%= item.product.id %>">
+                  <input type="number" name="quantity" value="<%= item.quantity %>" min="1" max="99" class="quantity-input quantity-input-sm">
+                  <button type="submit" class="btn btn-sm btn-outline">Update</button>
+                </form>
+              </td>
+              <td class="cart-line-total">$<%= (item.product.price * item.quantity).toFixed(2) %></td>
+              <td>
+                <form action="/cart/remove" method="POST">
+                  <input type="hidden" name="productId" value="<%= item.product.id %>">
+                  <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <div class="cart-summary">
+        <div class="cart-subtotal">
+          <span>Subtotal:</span>
+          <strong>$<%= subtotal.toFixed(2) %></strong>
+        </div>
+        <div class="cart-actions">
+          <a href="/products" class="btn btn-outline">Continue Shopping</a>
+          <a href="/checkout" class="btn btn-primary btn-lg">Proceed to Checkout</a>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>

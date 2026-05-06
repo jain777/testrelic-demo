@@ -1,0 +1,64 @@
+<%- include('partials/header', { title: title, cartCount: cartCount, user: user }) %>
+
+<section class="container section">
+  <div class="confirmation-container">
+    <div class="success-message">
+      <h1>Order Confirmed!</h1>
+      <p>Thank you for your purchase. Your order has been placed successfully.</p>
+    </div>
+
+    <div class="confirmation-details">
+      <div class="confirmation-field">
+        <span class="confirmation-label">Order ID:</span>
+        <strong>#<%= order.id %></strong>
+      </div>
+      <div class="confirmation-field">
+        <span class="confirmation-label">Date:</span>
+        <span><%= new Date(order.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+      </div>
+      <div class="confirmation-field">
+        <span class="confirmation-label">Estimated Delivery:</span>
+        <span><%= deliveryDate %></span>
+      </div>
+      <div class="confirmation-field">
+        <span class="confirmation-label">Status:</span>
+        <span class="status-badge status-confirmed"><%= order.status %></span>
+      </div>
+    </div>
+
+    <div class="confirmation-items">
+      <h2>Order Summary</h2>
+      <table class="order-items-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% order.items.forEach(item => { %>
+            <tr>
+              <td><%= item.name %></td>
+              <td><%= item.quantity %></td>
+              <td>$<%= (item.price * item.quantity).toFixed(2) %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2"><strong>Total</strong></td>
+            <td><strong>$<%= order.total.toFixed(2) %></strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="confirmation-actions">
+      <a href="/products" class="btn btn-primary">Continue Shopping</a>
+      <a href="/profile" class="btn btn-outline">View Order History</a>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,14 @@
+{
+  "name": "shoprelic-tests",
+  "version": "1.0.0",
+  "description": "Playwright tests for ShopRelic with TestRelic analytics",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:ui": "npx playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@testrelic/playwright-analytics": "^2.7.0"
+  }
+}

@@ -1,0 +1,74 @@
+<%- include('partials/header', { title: title, cartCount: cartCount, user: user }) %>
+
+<section class="container section">
+  <h1 class="page-title">Checkout</h1>
+
+  <div class="error-message" id="checkout-error" <% if (!error) { %>style="display: none;"<% } %>><%= error || '' %></div>
+
+  <div class="checkout-layout">
+    <div class="checkout-form-section">
+      <form action="/checkout" method="POST" id="checkout-form">
+        <h2>Shipping Information</h2>
+        <div class="form-group">
+          <label for="shippingName">Full Name</label>
+          <input type="text" id="shippingName" name="shippingName" value="<%= user.name %>" required class="form-input">
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input type="text" id="address" name="address" placeholder="123 Main Street" required class="form-input">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" placeholder="San Francisco" required class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="state">State</label>
+            <input type="text" id="state" name="state" placeholder="CA" required class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="zip">ZIP Code</label>
+            <input type="text" id="zip" name="zip" placeholder="94102" required class="form-input">
+          </div>
+        </div>
+
+        <h2>Payment Information</h2>
+        <div class="form-group">
+          <label for="cardNumber">Card Number</label>
+          <input type="text" id="cardNumber" name="cardNumber" placeholder="4242 4242 4242 4242" required class="form-input" maxlength="19">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="expiry">Expiry (MM/YY)</label>
+            <input type="text" id="expiry" name="expiry" placeholder="12/28" required class="form-input" maxlength="5">
+          </div>
+          <div class="form-group">
+            <label for="cvv">CVV</label>
+            <input type="text" id="cvv" name="cvv" placeholder="123" required class="form-input" maxlength="4">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Place Order</button>
+      </form>
+    </div>
+
+    <div class="checkout-summary">
+      <h2>Order Summary</h2>
+      <div class="summary-items">
+        <% cartItems.forEach(item => { %>
+          <div class="summary-item">
+            <span class="summary-item-name"><%= item.product.name %> &times; <%= item.quantity %></span>
+            <span class="summary-item-price">$<%= (item.product.price * item.quantity).toFixed(2) %></span>
+          </div>
+        <% }) %>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-total">
+        <span>Total:</span>
+        <strong>$<%= subtotal.toFixed(2) %></strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

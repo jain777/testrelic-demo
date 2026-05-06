@@ -1,0 +1,98 @@
+<%- include('partials/header', { title: title, cartCount: cartCount, user: user }) %>
+
+<section class="container section">
+  <h1 class="page-title">Product Catalog</h1>
+
+  <div class="catalog-controls">
+    <form action="/products" method="GET" class="search-form">
+      <input type="text" name="search" placeholder="Search products..." value="<%= search %>" class="search-input">
+      <% if (category) { %>
+        <input type="hidden" name="category" value="<%= category %>">
+      <% } %>
+      <% if (sort) { %>
+        <input type="hidden" name="sort" value="<%= sort %>">
+      <% } %>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <div class="filter-row">
+      <div class="category-filters">
+        <a href="/products?<%= sort ? 'sort=' + sort : '' %><%= search ? '&search=' + search : '' %>"
+           class="category-filter-btn <%= !category ? 'active' : '' %>">All</a>
+        <a href="/products?category=Electronics<%= sort ? '&sort=' + sort : '' %><%= search ? '&search=' + search : '' %>"
+           class="category-filter-btn <%= category === 'Electronics' ? 'active' : '' %>">Electronics</a>
+        <a href="/products?category=Clothing<%= sort ? '&sort=' + sort : '' %><%= search ? '&search=' + search : '' %>"
+           class="category-filter-btn <%= category === 'Clothing' ? 'active' : '' %>">Clothing</a>
+        <a href="/products?category=Home<%= sort ? '&sort=' + sort : '' %><%= search ? '&search=' + search : '' %>"
+           class="category-filter-btn <%= category === 'Home' ? 'active' : '' %>">Home</a>
+        <a href="/products?category=Sports<%= sort ? '&sort=' + sort : '' %><%= search ? '&search=' + search : '' %>"
+           class="category-filter-btn <%= category === 'Sports' ? 'active' : '' %>">Sports</a>
+      </div>
+
+      <div class="sort-control">
+        <label for="sort-select">Sort by:</label>
+        <select id="sort-select" name="sort" onchange="applySort(this.value)">
+          <option value="" <%= !sort ? 'selected' : '' %>>Default</option>
+          <option value="price-asc" <%= sort === 'price-asc' ? 'selected' : '' %>>Price: Low to High</option>
+          <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Price: High to Low</option>
+          <option value="name" <%= sort === 'name' ? 'selected' : '' %>>Name</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <% if (products.length === 0) { %>
+    <div class="empty-state">
+      <p>No products found matching your criteria.</p>
+      <a href="/products" class="btn btn-outline">Clear Filters</a>
+    </div>
+  <% } else { %>
+    <div class="product-grid">
+      <% products.forEach(product => { %>
+        <div class="product-card">
+          <a href="/products/<%= product.id %>">
+            <img src="<%= product.image %>" alt="<%= product.name %>" class="product-card-image">
+          </a>
+          <div class="product-card-body">
+            <span class="category-badge"><%= product.category %></span>
+            <h3 class="product-card-title">
+              <a href="/products/<%= product.id %>"><%= product.name %></a>
+            </h3>
+            <div class="product-card-rating">
+              <span class="stars">
+                <% for (let i = 1; i <= 5; i++) { %>
+                  <% if (i <= Math.floor(product.rating)) { %>
+                    &#9733;
+                  <% } else if (i - 0.5 <= product.rating) { %>
+                    &#9733;
+                  <% } else { %>
+                    &#9734;
+                  <% } %>
+                <% } %>
+              </span>
+              <span class="review-count">(<%= product.reviewCount %>)</span>
+            </div>
+            <div class="product-card-footer">
+              <span class="product-card-price">$<%= product.price.toFixed(2) %></span>
+              <a href="/products/<%= product.id %>" class="btn btn-sm btn-outline">View Details</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<script>
+function applySort(value) {
+  const params = new URLSearchParams(window.location.search);
+  if (value) {
+    params.set('sort', value);
+  } else {
+    params.delete('sort');
+  }
+  window.location.href = '/products?' + params.toString();
+}
+</script>
+
+<%- include('partials/footer') %>
