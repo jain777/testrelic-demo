@@ -29,4 +29,14 @@ test.describe('Product Detail', () => {
     await page.click('a:has-text("Back"), a[href="/products"]');
     await expect(page).toHaveURL('/products');
   });
+
+  test('should load product page within acceptable time', async ({ page }) => {
+    // Product 7 has an intermittent slow DB query (~30% chance of 3-5s delay).
+    // This test measures actual page load time and fails when it exceeds 2s,
+    // creating a naturally flaky test that appears in ~30% of runs.
+    const start = Date.now();
+    await page.goto('/products/7');
+    const loadTime = Date.now() - start;
+    expect(loadTime).toBeLessThan(2000);
+  });
 });

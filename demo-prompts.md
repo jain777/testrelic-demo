@@ -20,6 +20,20 @@ Curated prompts for the YC S26 demo video. Use these in sequence to tell a compe
 4. **"What is the root cause of the checkout payment failures?"**
    - Expected: Traces to 500 error from payment endpoint, shows "Payment processing failed: Gateway timeout" error message from network logs
 
+### User Complaint Correlation & Coverage Gaps
+
+5. **"A user emailed saying checkout is broken — which test run shows this failure?"**
+   - Expected: Correlates the user complaint (payment error) with `checkout.spec.ts > should place order successfully` failures in runs 9-12, shows matching error "Payment processing failed: Gateway timeout"
+
+6. **"A user is complaining that coupon code SAVE20 doesn't apply a discount. Do we have test coverage for this?"**
+   - Expected: Identifies that no test covers the coupon/discount flow. The `/api/apply-coupon` endpoint exists but is bugged (returns success with 0% discount). No test exercises it — this is a coverage gap.
+
+7. **"What bugs exist in the app that our test suite doesn't catch?"**
+   - Expected: Flags the broken coupon endpoint as an untested bug — endpoint silently fails, and there's no test to catch it
+
+8. **"Show me which user complaints map to existing test failures vs coverage gaps"**
+   - Expected: Checkout complaint → covered by `checkout.spec.ts` (caught in runs 9-12). Coupon complaint → NOT covered, no test exists for `/api/apply-coupon`
+
 ### Reports & Artifacts
 
 5. **"Generate a sprint review deck with pass rate trends, top failures, and MTTR"**

@@ -127,6 +127,16 @@ app.get('/products/:id', (req, res) => {
   if (!product) {
     return res.status(404).send('Product not found');
   }
+
+  // Simulate intermittent slow DB query for product ID 7 only.
+  // ~30% chance of 3-5s delay, creating a naturally flaky test.
+  if (product.id === 7 && Math.random() < 0.3) {
+    const delay = 3000 + Math.random() * 2000;
+    return setTimeout(() => {
+      res.render('product-detail', { title: `${product.name} - ShopRelic`, product });
+    }, delay);
+  }
+
   res.render('product-detail', { title: `${product.name} - ShopRelic`, product });
 });
 
@@ -359,6 +369,25 @@ app.get('/profile', (req, res) => {
   }
 
   res.render('profile', { title: 'My Profile - ShopRelic', userOrders });
+});
+
+// --- POST /api/apply-coupon (BUG: silently fails - never applies discount) ---
+app.post('/api/apply-coupon', (req, res) => {
+  const { code } = req.body;
+
+  if (!code) {
+    return res.status(400).json({ error: 'Coupon code is required' });
+  }
+
+  // Bug: endpoint accepts the coupon and returns success but never actually
+  // applies any discount. The discountAmount is always 0.
+  res.json({
+    success: true,
+    code: code,
+    message: `Coupon ${code} applied`,
+    discountAmount: 0,
+    discountPercent: 0
+  });
 });
 
 // --- GET /api/health ---
